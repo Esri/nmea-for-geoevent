@@ -1,0 +1,77 @@
+<adapter name="NMEA" label="NMEA Inbound Adapter" domain="com.esri.ges.adapter.inbound" type="inbound">
+	<description>This adapter is capable of receiving/parsing raw data in the NMEA (National Marine Electronics Association) format.</description>
+	<geoEventDefinitions>
+		<geoEventDefinition name="NMEAGPGGA">
+			<fieldDefinitions>
+				<fieldDefinition name="DeviceId" type="String">
+					<fieldDefinitionTag>
+						<name>TRACK_ID</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="TimeStamp" type="Date">
+					<fieldDefinitionTag>
+						<name>TIME_START</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="Shape" type="Geometry">
+					<fieldDefinitionTag>
+						<name>GEOMETRY</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="GPSQuality" type="Short"/>
+				<fieldDefinition name="Satellites" type="Short"/>
+				<fieldDefinition name="HDOP" type="Double"/>
+				<fieldDefinition name="Altitude" type="Double"/>
+				<fieldDefinition name="AltitudeUnits" type="String"/>
+				<fieldDefinition name="Height" type="Double"/>
+				<fieldDefinition name="HeightUnits" type="String"/>
+				<fieldDefinition name="Update" type="String"/>
+				<fieldDefinition name="StationId" type="String"/>
+			</fieldDefinitions>
+		</geoEventDefinition>
+		<geoEventDefinition name="NMEAGPGLL">
+			<fieldDefinitions>
+				<fieldDefinition name="DeviceId" type="String">
+					<fieldDefinitionTag>
+						<name>TRACK_ID</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="TimeStamp" type="Date">
+					<fieldDefinitionTag>
+						<name>TIME_START</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="Shape" type="Geometry">
+					<fieldDefinitionTag>
+						<name>GEOMETRY</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="Validity" type="String"/>
+			</fieldDefinitions>
+		</geoEventDefinition>
+		<geoEventDefinition name="NMEAGPRMC">
+			<fieldDefinitions>
+				<fieldDefinition name="DeviceId" type="String">
+					<fieldDefinitionTag>
+						<name>TRACK_ID</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="TimeStamp" type="Date">
+					<fieldDefinitionTag>
+						<name>TIME_START</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="Shape" type="Geometry">
+					<fieldDefinitionTag>
+						<name>GEOMETRY</name>
+					</fieldDefinitionTag>
+				</fieldDefinition>
+				<fieldDefinition name="Validity" type="String"/>
+				<fieldDefinition name="Speed" type="Double"/>
+				<fieldDefinition name="Course" type="Double"/>
+				<fieldDefinition name="Variation" type="Double"/>
+				<fieldDefinition name="EastWest" type="String"/>
+			</fieldDefinitions>
+		</geoEventDefinition>
+	</geoEventDefinitions>
+</adapter>
