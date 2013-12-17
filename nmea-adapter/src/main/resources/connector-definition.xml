@@ -12,7 +12,7 @@
 		<hidden>
 			<property name="mode" label="Mode" default="SERVER" source="transport" />
 			<property name="host" label="Host (Client Mode)" default="" source="transport" />
-			<property name="clientConnectionTimeout" label="Connection Timeout (Client Mode)" default="" source="transport" />
+			<property name="clientConnectionTimeout" label="Connection Timeout (Client Mode)" default="60" source="transport" />
 			<property name="handshake" label="Handshake Text" default="" source="transport" />
 		</hidden>
 	</properties>
