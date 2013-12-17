@@ -3,7 +3,7 @@
 	<bean id="nmeaInboundAdapterServiceBean" class="com.esri.geoevent.adapter.nmea.NmeaInboundAdapterService" activation="eager">
 		<property name="bundleContext" ref="blueprintBundleContext"/>
 	</bean>
-	<service id="nmeaInboundAdapterService" ref="nmeaInboundAdapterServiceBean" interface="com.esri.geoevent.adapter.AdapterService">
+	<service id="nmeaInboundAdapterService" ref="nmeaInboundAdapterServiceBean" interface="com.esri.ges.adapter.AdapterService">
 		<service-properties>
 			<entry key="threadSafe" value="false"/>
 		</service-properties>

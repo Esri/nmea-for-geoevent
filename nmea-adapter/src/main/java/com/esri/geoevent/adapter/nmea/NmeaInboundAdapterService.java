@@ -1,5 +1,7 @@
 package com.esri.geoevent.adapter.nmea;
 
+import javax.xml.bind.JAXBException;
+
 import com.esri.ges.adapter.Adapter;
 import com.esri.ges.adapter.AdapterServiceBase;
 import com.esri.ges.adapter.util.XmlAdapterDefinition;
@@ -9,7 +11,16 @@ public class NmeaInboundAdapterService extends AdapterServiceBase
 {
   public NmeaInboundAdapterService()
   {
-    definition = new XmlAdapterDefinition(getResourceAsStream("adapter-definition.xml"));
+    XmlAdapterDefinition xmlAdapterDefinition = new XmlAdapterDefinition(getResourceAsStream("adapter-definition.xml"));
+    try
+    {
+      xmlAdapterDefinition.loadConnector(getResourceAsStream("connector-definition.xml"));
+    }
+    catch (JAXBException e)
+    {
+      throw new RuntimeException(e);
+    }
+    definition = xmlAdapterDefinition;
   }
 
   @Override

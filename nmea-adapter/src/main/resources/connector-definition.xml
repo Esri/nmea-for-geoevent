@@ -1,0 +1,19 @@
+<connectorDefinition label="Receive NMEA from a TCP Socket" name="esri-in-tcp-nmea" type="inbound">
+	<description>Receive NMEA sentences on a TCP Socket. The NMEA sentences supported include NMEAGPGGA, NMEAGPGLL, and NMEAGPRMC.</description>
+	<defaultName>nmea-tcp-in</defaultName>
+	<adapter uri="com.esri.geoevent.adapter.inbound/NMEA/10.2.0" />
+	<transport uri="com.esri.ges.transport.inbound/TCP/10.2.0" />
+	<properties>
+		<shown>
+			<property name="port" label="Server Port" default="5565" source="transport" />
+		</shown>
+		<advanced>
+		</advanced>
+		<hidden>
+			<property name="mode" label="Mode" default="SERVER" source="transport" />
+			<property name="host" label="Host (Client Mode)" default="" source="transport" />
+			<property name="clientConnectionTimeout" label="Connection Timeout (Client Mode)" default="" source="transport" />
+			<property name="handshake" label="Handshake Text" default="" source="transport" />
+		</hidden>
+	</properties>
+</connectorDefinition>
