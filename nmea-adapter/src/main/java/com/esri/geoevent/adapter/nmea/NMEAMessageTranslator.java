@@ -24,7 +24,7 @@ public abstract class NMEAMessageTranslator
     }
     if (date != null)
     {
-      c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)) - 1);
+      c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)));
       c.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)) - 1);
       c.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(4, 6)));
     }
