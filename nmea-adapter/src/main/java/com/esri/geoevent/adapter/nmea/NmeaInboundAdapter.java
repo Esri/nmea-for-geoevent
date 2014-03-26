@@ -24,9 +24,10 @@
 
 package com.esri.geoevent.adapter.nmea;
 
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -35,100 +36,119 @@ import org.apache.commons.logging.LogFactory;
 import com.esri.ges.adapter.AdapterDefinition;
 import com.esri.ges.adapter.InboundAdapterBase;
 import com.esri.ges.core.component.ComponentException;
-import com.esri.ges.core.geoevent.FieldException;
 import com.esri.ges.core.geoevent.GeoEvent;
-import com.esri.ges.messaging.MessagingException;
+import com.esri.ges.spatial.Spatial;
 
 public class NmeaInboundAdapter extends InboundAdapterBase
 {
-  private static final Log                         LOG         = LogFactory.getLog(NmeaInboundAdapter.class);
+  private static final Log LOG = LogFactory.getLog(NmeaInboundAdapter.class);
   private final Map<String, NMEAMessageTranslator> translators = new HashMap<String, NMEAMessageTranslator>();
-  StringBuilder                                    nameBuffer  = new StringBuilder();
+  StringBuilder nameBuffer = new StringBuilder();
 
   public NmeaInboundAdapter(AdapterDefinition definition) throws ComponentException
   {
     super(definition);
-    translators.put("NMEAGPGGA", new NMEAGPGGAMessageTranslator());
-    translators.put("NMEAGPGLL", new NMEAGPGLLMessageTranslator());
-    translators.put("NMEAGPRMC", new NMEAGPRMCMessageTranslator());
   }
+  
+  private class GeoEventProducer implements Runnable
+  {
+    private String channelId;
+    private List<byte[]> messages;
 
+    public GeoEventProducer(String channelId, List<byte[]> messages)
+    {
+      this.channelId = channelId;
+      this.messages = messages;
+    }
+
+    @Override
+    public void run()
+    {
+      while (!messages.isEmpty())
+      {
+        String[] data = new String(messages.remove(0)).split(",");
+        if (data.length > 0)
+        {
+          String gedName = "NMEA" + data[0];
+          if (translators.containsKey(gedName))
+          {
+            try
+            {
+              NMEAMessageTranslator translator = translators.get(gedName);
+              translator.validate(data);
+              GeoEvent geoEvent = geoEventCreator.create(((AdapterDefinition)definition).getGeoEventDefinition(gedName).getGuid());
+              geoEvent.setField(0, channelId);
+              translator.translate(geoEvent, data);
+              geoEventListener.receive(geoEvent);
+            }
+            catch (Exception e)
+            {
+              LOG.error("Exception while translating a NMEA message : " + e.getMessage());
+            }
+          }
+        }
+      }
+    }
+  }
+  
   @Override
   public GeoEvent adapt(ByteBuffer buffer, String channelId)
   {
-    if (buffer != null && buffer.remaining() > 6)
-    {
-      try
-      {
-        scanForSentenceBeginning(buffer);
-      }
-      catch (BufferUnderflowException ex)
-      {
-        LOG.error("Could not find a NMEA Sentence.");
-      }
-      byte[] chars = new byte[6];
-      buffer.get(chars);
-      String edName = parseEventDefinitionName(new String(chars));
-      if (translators.containsKey(edName))
-        try
-        {
-          GeoEvent geoEvent = geoEventCreator.create(((AdapterDefinition) definition).getGeoEventDefinition(edName).getGuid());
-          translators.get(edName).translate(channelId, buffer, geoEvent, spatial);
-          return geoEvent;
-        }
-        catch (MessagingException e)
-        {
-          LOG.error("Exception while translating a NMEA message : " + e.getMessage());
-        }
-        catch (FieldException e)
-        {
-          LOG.error("Exception while translating a NMEA message : " + e.getMessage());
-        }
-    }
+    // We don't need to implement anything in here because this method will
+    // never get called. It would normally be called
+    // by the base class's receive() method. However, we are overriding that
+    // method, and our new implementation does not call
+    // the adapter's adapt() method.
     return null;
   }
 
-  private void scanForSentenceBeginning(ByteBuffer buffer) throws BufferUnderflowException
+  @Override
+  public void receive(ByteBuffer buffer, String channelId)
   {
-    buffer.mark();
-    nameBuffer.setLength(0);
-    for (int i = 0; i < 6; i++)
-      nameBuffer.append((char) buffer.get());
-    while (true)
-    {
-      String nameAsString = nameBuffer.toString();
-      if ("$GPGGA".equals(nameAsString))
-      {
-        buffer.position(buffer.position() - 6);
-        buffer.mark();
-        return;
-      }
-      else if ("$GPRMC".equals(nameAsString))
-      {
-        buffer.position(buffer.position() - 6);
-        buffer.mark();
-        return;
-      }
-      else if ("$GPGLL".equals(nameAsString))
-      {
-        buffer.position(buffer.position() - 6);
-        buffer.mark();
-        return;
-      }
-      nameBuffer.deleteCharAt(0);
-      nameBuffer.append((char) buffer.get());
-    }
-
+    new Thread(new GeoEventProducer(channelId, index(buffer))).start();
   }
-
-  private String parseEventDefinitionName(String msgFormat)
+  
+  private static List<byte[]> index(ByteBuffer in)
   {
-    if ("$GPGGA".equals(msgFormat))
-      return "NMEAGPGGA";
-    else if ("$GPRMC".equals(msgFormat))
-      return "NMEAGPRMC";
-    else if ("$GPGLL".equals(msgFormat))
-      return "NMEAGPGLL";
-    return null;
+    List<byte[]> messages = new ArrayList<byte[]>();
+    for (int i = -1; in.hasRemaining();)
+    {
+      byte b = in.get();
+      if (b == ((byte) '$')) // bom
+      {
+        i = in.position();
+        in.mark();
+      }
+      else if (b == ((byte) '\r') || b == ((byte) '\n')) // eom
+      {
+        if (i != -1)
+        {
+          byte[] message = new byte[in.position() - 1 - i];
+          System.arraycopy(in.array(), i, message, 0, message.length);
+          messages.add(message);
+        }
+        i = -1;
+        in.mark();
+      }
+      else if (messages.isEmpty() && i == -1)
+        in.mark();
+    }
+    return messages;
+  }
+  
+  @Override
+  public void shutdown()
+  {
+    super.shutdown();
+    translators.clear();
+  }
+  
+  @Override
+  public void setSpatial(Spatial spatial)
+  {
+    super.setSpatial(spatial);
+    translators.put("NMEAGPGGA", new NMEAGPGGAMessageTranslator(spatial));
+    translators.put("NMEAGPGLL", new NMEAGPGLLMessageTranslator(spatial));
+    translators.put("NMEAGPRMC", new NMEAGPRMCMessageTranslator(spatial));
   }
 }
