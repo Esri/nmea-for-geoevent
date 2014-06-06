@@ -52,7 +52,7 @@ public class NMEAGPRMCMessageTranslator extends NMEAMessageTranslator
   @Override
   protected void validate(String[] data) throws ValidationException
   {
-    if (data == null || data.length != 12)
+    if (data == null || data.length < 12 || data.length > 14)
       throw new ValidationException("NMEAGPRMC message data is invalid.");
   }
 }
