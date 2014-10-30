@@ -20,7 +20,7 @@
   Redlands, California, USA 92373
 
   email: contracts@esri.com
-*/
+ */
 
 package com.esri.geoevent.adapter.nmea;
 
@@ -30,125 +30,119 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.esri.ges.adapter.AdapterDefinition;
 import com.esri.ges.adapter.InboundAdapterBase;
 import com.esri.ges.core.component.ComponentException;
 import com.esri.ges.core.geoevent.GeoEvent;
-import com.esri.ges.spatial.Spatial;
+import com.esri.ges.framework.i18n.BundleLogger;
+import com.esri.ges.framework.i18n.BundleLoggerFactory;
 
 public class NmeaInboundAdapter extends InboundAdapterBase
 {
-  private static final Log LOG = LogFactory.getLog(NmeaInboundAdapter.class);
-  private final Map<String, NMEAMessageTranslator> translators = new HashMap<String, NMEAMessageTranslator>();
-  StringBuilder nameBuffer = new StringBuilder();
+  private static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(NmeaInboundAdapter.class);
+  
+	private final Map<String, NMEAMessageTranslator>	translators	= new HashMap<String, NMEAMessageTranslator>();
+	StringBuilder																			nameBuffer	= new StringBuilder();
 
-  public NmeaInboundAdapter(AdapterDefinition definition) throws ComponentException
-  {
-    super(definition);
-  }
-  
-  private class GeoEventProducer implements Runnable
-  {
-    private String channelId;
-    private List<byte[]> messages;
+	public NmeaInboundAdapter(AdapterDefinition definition) throws ComponentException
+	{
+		super(definition);
+		translators.put("NMEAGPGGA", new NMEAGPGGAMessageTranslator());
+		translators.put("NMEAGPGLL", new NMEAGPGLLMessageTranslator());
+		translators.put("NMEAGPRMC", new NMEAGPRMCMessageTranslator());
+	}
 
-    public GeoEventProducer(String channelId, List<byte[]> messages)
-    {
-      this.channelId = channelId;
-      this.messages = messages;
-    }
+	private class GeoEventProducer implements Runnable
+	{
+		private String				channelId;
+		private List<byte[]>	messages;
 
-    @Override
-    public void run()
-    {
-      while (!messages.isEmpty())
-      {
-        String[] data = new String(messages.remove(0)).split(",");
-        if (data.length > 0)
-        {
-          String gedName = "NMEA" + data[0];
-          if (translators.containsKey(gedName))
-          {
-            try
-            {
-              NMEAMessageTranslator translator = translators.get(gedName);
-              translator.validate(data);
-              GeoEvent geoEvent = geoEventCreator.create(((AdapterDefinition)definition).getGeoEventDefinition(gedName).getGuid());
-              geoEvent.setField(0, channelId);
-              translator.translate(geoEvent, data);
-              geoEventListener.receive(geoEvent);
-            }
-            catch (Exception e)
-            {
-              LOG.error("Exception while translating a NMEA message : " + e.getMessage());
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  @Override
-  public GeoEvent adapt(ByteBuffer buffer, String channelId)
-  {
-    // We don't need to implement anything in here because this method will
-    // never get called. It would normally be called
-    // by the base class's receive() method. However, we are overriding that
-    // method, and our new implementation does not call
-    // the adapter's adapt() method.
-    return null;
-  }
+		public GeoEventProducer(String channelId, List<byte[]> messages)
+		{
+			this.channelId = channelId;
+			this.messages = messages;
+		}
 
-  @Override
-  public void receive(ByteBuffer buffer, String channelId)
-  {
-    new Thread(new GeoEventProducer(channelId, index(buffer))).start();
-  }
-  
-  private static List<byte[]> index(ByteBuffer in)
-  {
-    List<byte[]> messages = new ArrayList<byte[]>();
-    for (int i = -1; in.hasRemaining();)
-    {
-      byte b = in.get();
-      if (b == ((byte) '$')) // bom
-      {
-        i = in.position();
-        in.mark();
-      }
-      else if (b == ((byte) '\r') || b == ((byte) '\n')) // eom
-      {
-        if (i != -1)
-        {
-          byte[] message = new byte[in.position() - 1 - i];
-          System.arraycopy(in.array(), i, message, 0, message.length);
-          messages.add(message);
-        }
-        i = -1;
-        in.mark();
-      }
-      else if (messages.isEmpty() && i == -1)
-        in.mark();
-    }
-    return messages;
-  }
-  
-  @Override
-  public void shutdown()
-  {
-    super.shutdown();
-    translators.clear();
-  }
-  
-  @Override
-  public void setSpatial(Spatial spatial)
-  {
-    super.setSpatial(spatial);
-    translators.put("NMEAGPGGA", new NMEAGPGGAMessageTranslator(spatial));
-    translators.put("NMEAGPGLL", new NMEAGPGLLMessageTranslator(spatial));
-    translators.put("NMEAGPRMC", new NMEAGPRMCMessageTranslator(spatial));
-  }
+		@Override
+		public void run()
+		{
+			while (!messages.isEmpty())
+			{
+				String[] data = new String(messages.remove(0)).split(",");
+				if (data.length > 0)
+				{
+					String gedName = "NMEA" + data[0];
+					if (translators.containsKey(gedName))
+					{
+						try
+						{
+							NMEAMessageTranslator translator = translators.get(gedName);
+							translator.validate(data);
+							GeoEvent geoEvent = geoEventCreator.create(((AdapterDefinition) definition).getGeoEventDefinition(gedName).getGuid());
+							geoEvent.setField(0, channelId);
+							translator.translate(geoEvent, data);
+							geoEventListener.receive(geoEvent);
+						}
+						catch (Exception error)
+						{
+							LOGGER.error("TRANSLATION_ERROR", error.getMessage());
+							LOGGER.info(error.getMessage(), error);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public GeoEvent adapt(ByteBuffer buffer, String channelId)
+	{
+		// We don't need to implement anything in here because this method will
+		// never get called. It would normally be called
+		// by the base class's receive() method. However, we are overriding that
+		// method, and our new implementation does not call
+		// the adapter's adapt() method.
+		return null;
+	}
+
+	@Override
+	public void receive(ByteBuffer buffer, String channelId)
+	{
+		new Thread(new GeoEventProducer(channelId, index(buffer))).start();
+	}
+
+	private static List<byte[]> index(ByteBuffer in)
+	{
+		List<byte[]> messages = new ArrayList<byte[]>();
+		for (int i = -1; in.hasRemaining();)
+		{
+			byte b = in.get();
+			if (b == ((byte) '$')) // bom
+			{
+				i = in.position();
+				in.mark();
+			}
+			else if (b == ((byte) '\r') || b == ((byte) '\n')) // eom
+			{
+				if (i != -1)
+				{
+					byte[] message = new byte[in.position() - 1 - i];
+					System.arraycopy(in.array(), i, message, 0, message.length);
+					messages.add(message);
+				}
+				i = -1;
+				in.mark();
+			}
+			else if (messages.isEmpty() && i == -1)
+				in.mark();
+		}
+		return messages;
+	}
+
+	@Override
+	public void shutdown()
+	{
+		super.shutdown();
+		translators.clear();
+	}
 }

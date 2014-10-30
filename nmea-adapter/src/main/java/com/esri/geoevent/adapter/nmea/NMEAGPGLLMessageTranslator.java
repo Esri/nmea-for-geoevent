@@ -27,13 +27,15 @@ package com.esri.geoevent.adapter.nmea;
 import com.esri.ges.core.geoevent.FieldException;
 import com.esri.ges.core.geoevent.GeoEvent;
 import com.esri.ges.core.validation.ValidationException;
-import com.esri.ges.spatial.Spatial;
+import com.esri.ges.framework.i18n.BundleLogger;
+import com.esri.ges.framework.i18n.BundleLoggerFactory;
 
 public class NMEAGPGLLMessageTranslator extends NMEAMessageTranslator
 {
-  public NMEAGPGLLMessageTranslator(Spatial spatial)
+  private static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(NMEAGPGLLMessageTranslator.class);
+
+  public NMEAGPGLLMessageTranslator()
   {
-    super(spatial);
   }
 
   @Override
@@ -49,6 +51,6 @@ public class NMEAGPGLLMessageTranslator extends NMEAMessageTranslator
   protected void validate(String[] data) throws ValidationException
   {
     if (data == null || data.length != 7)
-      throw new ValidationException("NMEAGPGLL message data is invalid.");
+      throw new ValidationException(LOGGER.translate("INVALID_NMEAGPGLL_MSG"));
   }
 }

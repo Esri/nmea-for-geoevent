@@ -1,5 +1,5 @@
-<adapter name="NMEA" label="NMEA Inbound Adapter" domain="com.esri.geoevent.adapter.inbound" type="inbound">
-	<description>This adapter is capable of receiving/parsing raw data in the NMEA (National Marine Electronics Association) format.</description>
+<adapter name="NMEA" label="${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_LABEL}" domain="com.esri.geoevent.adapter.inbound" type="inbound">
+	<description>${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_DESC}</description>
 	<geoEventDefinitions>
 		<geoEventDefinition name="NMEAGPGGA">
 			<fieldDefinitions>
