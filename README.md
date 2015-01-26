@@ -1,6 +1,6 @@
 # nmea-for-geoevent
 
-ArcGIS 10.3.x GeoEvent Extension Sample Connector for receiving raw data in the NMEA format.
+ArcGIS 10.3.x GeoEvent Extension for Server Sample Connector for receiving raw data in the NMEA format.
 
 ![App](nmea-for-geoevent.png?raw=true)
 
@@ -28,7 +28,7 @@ Installing the built jar files:
 ## Resources
 
 * [Download the connector's tutorial](http://www.arcgis.com/home/item.html?id=1717c2f7fe5b497491234ce3a352bdd2) from the ArcGIS GeoEvent Extension Gallery
-* [ArcGIS GeoEvent Extension for Server Resource Center](http://links.esri.com/geoevent)
+* [ArcGIS GeoEvent Extension for Server Resources](http://links.esri.com/geoevent)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * [twitter@esri](http://twitter.com/esri)
 
