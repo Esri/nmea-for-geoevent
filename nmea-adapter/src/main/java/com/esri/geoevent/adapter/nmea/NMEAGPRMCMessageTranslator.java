@@ -48,13 +48,20 @@ public class NMEAGPRMCMessageTranslator extends NMEAMessageTranslator
     geoEvent.setField(i++, convertToDouble(data[7]));
     geoEvent.setField(i++, convertToDouble(data[8]));
     geoEvent.setField(i++, convertToDouble(data[10]));
-    geoEvent.setField(i++, data[11].split("\\*")[0]);
+    
+    if(data.length==12)
+    	geoEvent.setField(i++, data[11].split("\\*")[0]);
+    else
+    {
+    	geoEvent.setField(i++, data[11]);
+    	geoEvent.setField(i++, data[12].split("\\*")[0]);
+    }
   }
 
   @Override
   protected void validate(String[] data) throws ValidationException
   {
-    if (data == null || data.length != 12)
+    if (data == null || data.length <12 || data.length > 13)
       throw new ValidationException(LOGGER.translate("INVALID_NMEAGPRMC_MSG"));
   }
 }

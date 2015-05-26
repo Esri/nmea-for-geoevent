@@ -71,6 +71,7 @@
 				<fieldDefinition name="Course" type="Double"/>
 				<fieldDefinition name="Variation" type="Double"/>
 				<fieldDefinition name="EastWest" type="String"/>
+				<fieldDefinition name="Mode" type="String"/>				
 			</fieldDefinitions>
 		</geoEventDefinition>
 	</geoEventDefinitions>
