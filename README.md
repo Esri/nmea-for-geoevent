@@ -1,6 +1,6 @@
 # nmea-for-geoevent
 
-ArcGIS 10.3 GeoEvent Extension for Server sample NMEA Input Connector for receiving raw data in the NMEA format.
+ArcGIS 10.4 GeoEvent Extension for Server sample NMEA Input Connector for receiving raw data in the NMEA format.
 
 ![App](nmea-for-geoevent.png?raw=true)
 
