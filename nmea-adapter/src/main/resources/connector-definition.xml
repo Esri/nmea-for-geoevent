@@ -3,8 +3,8 @@
 	name="esri-in-tcp-nmea" type="inbound">
 	<description>${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_DESC}</description>
 	<defaultName>nmea-tcp-in</defaultName>
-	<adapter uri="com.esri.geoevent.adapter.inbound/NMEA/10.5.0" />
-	<transport uri="com.esri.ges.transport.inbound/TCP/10.5.0" />
+	<adapter uri="com.esri.geoevent.adapter.inbound/NMEA/10.6.0" />
+	<transport uri="com.esri.ges.transport.inbound/TCP/10.6.0" />
 	<properties>
 		<shown>
 			<property name="port" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_SERVER_PORT_LBL}" default="5565" source="transport" />
