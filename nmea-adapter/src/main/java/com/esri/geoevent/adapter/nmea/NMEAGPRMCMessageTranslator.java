@@ -1,5 +1,5 @@
 /*
-  Copyright 1995-2013 Esri
+  Copyright 1995-2019 Esri
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,17 +27,9 @@ package com.esri.geoevent.adapter.nmea;
 import com.esri.ges.core.geoevent.FieldException;
 import com.esri.ges.core.geoevent.GeoEvent;
 import com.esri.ges.core.validation.ValidationException;
-import com.esri.ges.framework.i18n.BundleLogger;
-import com.esri.ges.framework.i18n.BundleLoggerFactory;
 
 public class NMEAGPRMCMessageTranslator extends NMEAMessageTranslator
 {
-  private static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(NMEAGPRMCMessageTranslator.class);
-
-  public NMEAGPRMCMessageTranslator()
-  {
-  }
-
   @Override
   public void translate(GeoEvent geoEvent, String[] data) throws FieldException
   {
@@ -48,20 +40,22 @@ public class NMEAGPRMCMessageTranslator extends NMEAMessageTranslator
     geoEvent.setField(i++, convertToDouble(data[7]));
     geoEvent.setField(i++, convertToDouble(data[8]));
     geoEvent.setField(i++, convertToDouble(data[10]));
-    
-    if(data.length==12)
-    	geoEvent.setField(i++, data[11].split("\\*")[0]);
+
+    if (data.length == 12)
+      geoEvent.setField(i++, data[11].split("\\*")[0]);
     else
     {
-    	geoEvent.setField(i++, data[11]);
-    	geoEvent.setField(i++, data[12].split("\\*")[0]);
+      geoEvent.setField(i++, data[11]);
+      geoEvent.setField(i++, data[12].split("\\*")[0]);
     }
+    if (LOGGER.isTraceEnabled() && data != null && data.length > 0)
+      LOGGER.trace("Translated GPRMC {0} to {1}", String.join(" ", data), geoEvent);
   }
 
   @Override
   protected void validate(String[] data) throws ValidationException
   {
-    if (data == null || data.length <12 || data.length > 13)
+    if (data == null || data.length < 12)
       throw new ValidationException(LOGGER.translate("INVALID_NMEAGPRMC_MSG"));
   }
 }

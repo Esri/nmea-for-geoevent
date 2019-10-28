@@ -1,5 +1,5 @@
 /*
-  Copyright 1995-2013 Esri
+  Copyright 1995-2019 Esri
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,17 +27,9 @@ package com.esri.geoevent.adapter.nmea;
 import com.esri.ges.core.geoevent.FieldException;
 import com.esri.ges.core.geoevent.GeoEvent;
 import com.esri.ges.core.validation.ValidationException;
-import com.esri.ges.framework.i18n.BundleLogger;
-import com.esri.ges.framework.i18n.BundleLoggerFactory;
 
 public class NMEAGPGLLMessageTranslator extends NMEAMessageTranslator
 {
-  private static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(NMEAGPGLLMessageTranslator.class);
-
-  public NMEAGPGLLMessageTranslator()
-  {
-  }
-
   @Override
   public void translate(GeoEvent geoEvent, String[] data) throws FieldException
   {
@@ -45,12 +37,15 @@ public class NMEAGPGLLMessageTranslator extends NMEAMessageTranslator
     geoEvent.setField(i++, toTime(data[5], null));
     geoEvent.setField(i++, toPoint(data[1], data[3], "N".equals(data[2]), "E".equals(data[4])));
     geoEvent.setField(i++, data[6].split("\\*")[0]);
+
+    if (LOGGER.isTraceEnabled() && data != null && data.length > 0)
+      LOGGER.trace("Translated GPGLL {0} to {1}", String.join(" ", data), geoEvent);
   }
 
   @Override
   protected void validate(String[] data) throws ValidationException
   {
-    if (data == null || data.length != 7)
+    if (data == null || data.length < 7)
       throw new ValidationException(LOGGER.translate("INVALID_NMEAGPGLL_MSG"));
   }
 }

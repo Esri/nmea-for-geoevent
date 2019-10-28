@@ -1,5 +1,5 @@
 /*
-  Copyright 1995-2013 Esri
+  Copyright 1995-2019 Esri
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -33,23 +33,23 @@ import com.esri.ges.core.component.ComponentException;
 
 public class NmeaInboundAdapterService extends AdapterServiceBase
 {
-	public NmeaInboundAdapterService()
-	{
-		XmlAdapterDefinition xmlAdapterDefinition = new XmlAdapterDefinition(getResourceAsStream("adapter-definition.xml"));
-		try
-		{
-			xmlAdapterDefinition.loadConnector(getResourceAsStream("connector-definition.xml"));
-		}
-		catch (JAXBException e)
-		{
-			throw new RuntimeException(e);
-		}
-		definition = xmlAdapterDefinition;
-	}
+  public NmeaInboundAdapterService()
+  {
+    XmlAdapterDefinition xmlAdapterDefinition = new XmlAdapterDefinition(getResourceAsStream("adapter-definition.xml"));
+    try
+    {
+      xmlAdapterDefinition.loadConnector(getResourceAsStream("connector-definition.xml"));
+    }
+    catch (JAXBException e)
+    {
+      throw new RuntimeException(e);
+    }
+    definition = xmlAdapterDefinition;
+  }
 
-	@Override
-	public Adapter createAdapter() throws ComponentException
-	{
-		return new NmeaInboundAdapter(definition);
-	}
+  @Override
+  public Adapter createAdapter() throws ComponentException
+  {
+    return new NmeaInboundAdapter(definition);
+  }
 }
