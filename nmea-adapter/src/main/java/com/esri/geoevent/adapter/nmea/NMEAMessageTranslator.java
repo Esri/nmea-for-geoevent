@@ -1,5 +1,5 @@
 /*
-  Copyright 1995-2013 Esri
+  Copyright 1995-2019 Esri
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -34,87 +34,91 @@ import com.esri.core.geometry.SpatialReference;
 import com.esri.ges.core.geoevent.FieldException;
 import com.esri.ges.core.geoevent.GeoEvent;
 import com.esri.ges.core.validation.ValidationException;
+import com.esri.ges.framework.i18n.BundleLogger;
+import com.esri.ges.framework.i18n.BundleLoggerFactory;
 
 public abstract class NMEAMessageTranslator
 {
-	public NMEAMessageTranslator()
-	{
-	}
+  protected static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(NmeaInboundAdapter.class);
 
-	protected abstract void translate(GeoEvent geoEvent, String[] data) throws FieldException;
+  protected abstract void translate(GeoEvent geoEvent, String[] data) throws FieldException;
 
-	protected abstract void validate(String[] data) throws ValidationException;
+  protected abstract void validate(String[] data) throws ValidationException;
 
-	protected Date toTime(String time, String date)
-	{
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		if (time != null)
-		{
-			c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.substring(0, 2)));
-			c.set(Calendar.MINUTE, Integer.parseInt(time.substring(2, 4)));
-			c.set(Calendar.SECOND, Integer.parseInt(time.substring(4, 6)));
-		}
-		if (date != null)
-		{
-			c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)));
-			c.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)) - 1);
-			c.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(4, 6)));
-		}
-		return c.getTime();
-	}
+  protected Date toTime(String time, String date)
+  {
+    LOGGER.trace("Parsing time string {0} and date string {1}", time, date);
+    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    if (time != null)
+    {
+      c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.substring(0, 2)));
+      c.set(Calendar.MINUTE, Integer.parseInt(time.substring(2, 4)));
+      c.set(Calendar.SECOND, Integer.parseInt(time.substring(4, 6)));
+    }
+    if (date != null)
+    {
+      c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)));
+      c.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)) - 1);
+      c.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(4, 6)));
+    }
+    LOGGER.trace("Parsed time/date: {0}", c);
+    return c.getTime();
+  }
 
-	protected MapGeometry toPoint(String latitude, String longitude, boolean isNorth, boolean isEast)
-	{
-		double lat_d = convertToDouble(latitude.substring(0, 2), 0d);
-		double lat_m = convertToDouble(latitude.substring(2, latitude.length()), 0d);
-		double lat = lat_d + (lat_m / 60.0);
-		double lon_d = convertToDouble(longitude.substring(0, 3), 0d);
-		double lon_m = convertToDouble(longitude.substring(3, longitude.length()), 0d);
-		double lon = lon_d + (lon_m / 60.0);
-		lat = isNorth ? lat : -lat;
-		lon = isEast ? lon : -lon;
-		return new MapGeometry(new Point(lon, lat), SpatialReference.create(4326));
-	}
+  protected MapGeometry toPoint(String latitude, String longitude, boolean isNorth, boolean isEast)
+  {
+    LOGGER.trace("Parsing lat string {0} and lon string {1}", latitude, longitude);
+    double lat_d = convertToDouble(latitude.substring(0, 2), 0d);
+    double lat_m = convertToDouble(latitude.substring(2, latitude.length()), 0d);
+    double lat = lat_d + (lat_m / 60.0);
+    double lon_d = convertToDouble(longitude.substring(0, 3), 0d);
+    double lon_m = convertToDouble(longitude.substring(3, longitude.length()), 0d);
+    double lon = lon_d + (lon_m / 60.0);
+    lat = isNorth ? lat : -lat;
+    lon = isEast ? lon : -lon;
+    LOGGER.trace("Parsed decimal degrees lat {0} and lon {1}", lat, lon);
+    return new MapGeometry(new Point(lon, lat), SpatialReference.create(4326));
+  }
 
-	public boolean isEmpty(String s)
-	{
-		return (s == null || s.length() == 0);
-	}
+  public boolean isEmpty(String s)
+  {
+    return (s == null || s.length() == 0);
+  }
 
-	public Double convertToDouble(String s, Double defaultValue)
-	{
-		if (!isEmpty(s))
-		{
-			try
-			{
-				return Double.parseDouble(s.replaceAll(",", "."));
-			}
-			catch (Exception e)
-			{
-				;
-			}
-		}
-		return defaultValue;
-	}
+  public Double convertToDouble(String s, Double defaultValue)
+  {
+    if (!isEmpty(s))
+    {
+      try
+      {
+        return Double.parseDouble(s.replaceAll(",", "."));
+      }
+      catch (Exception e)
+      {
+        ;
+      }
+    }
+    return defaultValue;
+  }
 
-	public Double convertToDouble(Object value)
-	{
-		return (value != null) ? (value instanceof Double) ? (Double) value : convertToDouble(value.toString(), null) : null;
-	}
+  public Double convertToDouble(Object value)
+  {
+    return (value != null) ? (value instanceof Double) ? (Double) value : convertToDouble(value.toString(), null) : null;
+  }
 
-	public Short convertToShort(Object value)
-	{
-		if (value != null)
-		{
-			if (value instanceof Short)
-				return (Short) value;
-			else
-			{
-				Double doubleValue = convertToDouble(value);
-				if (doubleValue != null)
-					return ((Long) Math.round(doubleValue)).shortValue();
-			}
-		}
-		return null;
-	}
+  public Short convertToShort(Object value)
+  {
+    if (value != null)
+    {
+      if (value instanceof Short)
+        return (Short) value;
+      else
+      {
+        Double doubleValue = convertToDouble(value);
+        if (doubleValue != null)
+          return ((Long) Math.round(doubleValue)).shortValue();
+      }
+    }
+    return null;
+  }
 }

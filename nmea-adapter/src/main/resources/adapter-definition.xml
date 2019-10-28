@@ -1,81 +1,127 @@
-<adapter 
-	name="NMEA" 
-	label="${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_LABEL}" 
-	domain="com.esri.geoevent.adapter.inbound" type="inbound">
-	<description>${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_DESC}</description>
-	<geoEventDefinitions>
-		<geoEventDefinition name="NMEAGPGGA">
-			<fieldDefinitions>
-				<fieldDefinition name="DeviceId" type="String">
-					<fieldDefinitionTag>
-						<name>TRACK_ID</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="TimeStamp" type="Date">
-					<fieldDefinitionTag>
-						<name>TIME_START</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="Shape" type="Geometry">
-					<fieldDefinitionTag>
-						<name>GEOMETRY</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="GPSQuality" type="Short"/>
-				<fieldDefinition name="Satellites" type="Short"/>
-				<fieldDefinition name="HDOP" type="Double"/>
-				<fieldDefinition name="Altitude" type="Double"/>
-				<fieldDefinition name="AltitudeUnits" type="String"/>
-				<fieldDefinition name="Height" type="Double"/>
-				<fieldDefinition name="HeightUnits" type="String"/>
-				<fieldDefinition name="Update" type="String"/>
-				<fieldDefinition name="StationId" type="String"/>
-			</fieldDefinitions>
-		</geoEventDefinition>
-		<geoEventDefinition name="NMEAGPGLL">
-			<fieldDefinitions>
-				<fieldDefinition name="DeviceId" type="String">
-					<fieldDefinitionTag>
-						<name>TRACK_ID</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="TimeStamp" type="Date">
-					<fieldDefinitionTag>
-						<name>TIME_START</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="Shape" type="Geometry">
-					<fieldDefinitionTag>
-						<name>GEOMETRY</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="Validity" type="String"/>
-			</fieldDefinitions>
-		</geoEventDefinition>
-		<geoEventDefinition name="NMEAGPRMC">
-			<fieldDefinitions>
-				<fieldDefinition name="DeviceId" type="String">
-					<fieldDefinitionTag>
-						<name>TRACK_ID</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="TimeStamp" type="Date">
-					<fieldDefinitionTag>
-						<name>TIME_START</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="Shape" type="Geometry">
-					<fieldDefinitionTag>
-						<name>GEOMETRY</name>
-					</fieldDefinitionTag>
-				</fieldDefinition>
-				<fieldDefinition name="Validity" type="String"/>
-				<fieldDefinition name="Speed" type="Double"/>
-				<fieldDefinition name="Course" type="Double"/>
-				<fieldDefinition name="Variation" type="Double"/>
-				<fieldDefinition name="EastWest" type="String"/>
-				<fieldDefinition name="Mode" type="String"/>				
-			</fieldDefinitions>
-		</geoEventDefinition>
-	</geoEventDefinitions>
+<adapter name="NMEA" label="${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_LABEL}" domain="com.esri.geoevent.adapter.inbound" type="inbound">
+  <description>Release ${project.release}: ${com.esri.geoevent.adapter.nmea-adapter.ADAPTER_IN_DESC}</description>
+  <geoEventDefinitions>
+    <geoEventDefinition name="NMEAGPGGA">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="TimeStamp" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Shape" type="Geometry">
+          <fieldDefinitionTag>
+            <name>GEOMETRY</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="GPSQuality" type="Short" />
+        <fieldDefinition name="Satellites" type="Short" />
+        <fieldDefinition name="HDOP" type="Double" />
+        <fieldDefinition name="Altitude" type="Double" />
+        <fieldDefinition name="AltitudeUnits" type="String" />
+        <fieldDefinition name="Height" type="Double" />
+        <fieldDefinition name="HeightUnits" type="String" />
+        <fieldDefinition name="Update" type="String" />
+        <fieldDefinition name="StationId" type="String" />
+      </fieldDefinitions>
+    </geoEventDefinition>
+    <geoEventDefinition name="NMEAGPGLL">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="TimeStamp" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Shape" type="Geometry">
+          <fieldDefinitionTag>
+            <name>GEOMETRY</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Validity" type="String" />
+      </fieldDefinitions>
+    </geoEventDefinition>
+    <geoEventDefinition name="NMEAGPRMC">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="TimeStamp" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Shape" type="Geometry">
+          <fieldDefinitionTag>
+            <name>GEOMETRY</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Validity" type="String" />
+        <fieldDefinition name="Speed" type="Double" />
+        <fieldDefinition name="Course" type="Double" />
+        <fieldDefinition name="Variation" type="Double" />
+        <fieldDefinition name="EastWest" type="String" />
+        <fieldDefinition name="Mode" type="String" />
+      </fieldDefinitions>
+    </geoEventDefinition>
+    <geoEventDefinition name="NMEAGPGSA">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="AutoSelection" type="String" />
+        <fieldDefinition name="3DFix" type="String" />
+        <fieldDefinition name="SatellitePRN01" type="String" />
+        <fieldDefinition name="SatellitePRN02" type="String" />
+        <fieldDefinition name="SatellitePRN03" type="String" />
+        <fieldDefinition name="SatellitePRN04" type="String" />
+        <fieldDefinition name="SatellitePRN05" type="String" />
+        <fieldDefinition name="SatellitePRN06" type="String" />
+        <fieldDefinition name="SatellitePRN07" type="String" />
+        <fieldDefinition name="SatellitePRN08" type="String" />
+        <fieldDefinition name="SatellitePRN09" type="String" />
+        <fieldDefinition name="SatellitePRN10" type="String" />
+        <fieldDefinition name="SatellitePRN11" type="String" />
+        <fieldDefinition name="SatellitePRN12" type="String" />
+        <fieldDefinition name="PDOP" type="Double" />
+        <fieldDefinition name="HDOP" type="Double" />
+        <fieldDefinition name="VDOP" type="Double" />
+        <fieldDefinition name="ReceiveTime" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+      </fieldDefinitions>
+    </geoEventDefinition>
+    <geoEventDefinition name="NMEAGPVTG">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="TrackTrue" type="Double" />
+        <fieldDefinition name="TrackMagnetic" type="Double" />
+        <fieldDefinition name="GroundSpeedKnots" type="Double" />
+        <fieldDefinition name="GroundSpeedKPH" type="Double" />
+        <fieldDefinition name="ReceiveTime" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+      </fieldDefinitions>
+    </geoEventDefinition>
+  </geoEventDefinitions>
 </adapter>

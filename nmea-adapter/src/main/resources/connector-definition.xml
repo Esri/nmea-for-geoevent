@@ -1,21 +1,19 @@
-<connectorDefinition 
-	label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_LABEL}" 
-	name="esri-in-tcp-nmea" type="inbound">
-	<description>${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_DESC}</description>
-	<defaultName>nmea-tcp-in</defaultName>
-	<adapter uri="com.esri.geoevent.adapter.inbound/NMEA/10.6.0" />
-	<transport uri="com.esri.ges.transport.inbound/TCP/10.6.0" />
-	<properties>
-		<shown>
-			<property name="port" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_SERVER_PORT_LBL}" default="5565" source="transport" />
-		</shown>
-		<advanced>
-		</advanced>
-		<hidden>
-			<property name="mode" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_MODE_LBL}" default="SERVER" source="transport" />
-			<property name="host" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_HOST_LBL}" default="" source="transport" />
-			<property name="clientConnectionTimeout" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_CONNECTION_TO_LBL}" default="60" source="transport" />
-			<property name="handshake" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_HANDSHAKE_LBL}" default="" source="transport" />
-		</hidden>
-	</properties>
+<connectorDefinition label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_LABEL}" name="esri-in-tcp-nmea" type="inbound">
+  <description>${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_DESC}</description>
+  <defaultName>nmea-tcp-in</defaultName>
+  <adapter uri="com.esri.geoevent.adapter.inbound/NMEA/${project.version}" />
+  <transport uri="com.esri.ges.transport.inbound/TCP/${project.version}" />
+  <properties>
+    <shown>
+      <property name="port" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_SERVER_PORT_LBL}" default="5565" source="transport" />
+    </shown>
+    <advanced>
+    </advanced>
+    <hidden>
+      <property name="mode" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_MODE_LBL}" default="SERVER" source="transport" />
+      <property name="host" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_HOST_LBL}" default="" source="transport" />
+      <property name="clientConnectionTimeout" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_CONNECTION_TO_LBL}" default="60" source="transport" />
+      <property name="handshake" label="${com.esri.geoevent.adapter.nmea-adapter.CONNECTOR_HANDSHAKE_LBL}" default="" source="transport" />
+    </hidden>
+  </properties>
 </connectorDefinition>
