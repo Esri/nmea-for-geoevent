@@ -74,6 +74,31 @@
         <fieldDefinition name="Mode" type="String" />
       </fieldDefinitions>
     </geoEventDefinition>
+    <geoEventDefinition name="NMEAGNRMC">
+      <fieldDefinitions>
+        <fieldDefinition name="DeviceId" type="String">
+          <fieldDefinitionTag>
+            <name>TRACK_ID</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="TimeStamp" type="Date">
+          <fieldDefinitionTag>
+            <name>TIME_START</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Shape" type="Geometry">
+          <fieldDefinitionTag>
+            <name>GEOMETRY</name>
+          </fieldDefinitionTag>
+        </fieldDefinition>
+        <fieldDefinition name="Validity" type="String" />
+        <fieldDefinition name="Speed" type="Double" />
+        <fieldDefinition name="Course" type="Double" />
+        <fieldDefinition name="Variation" type="Double" />
+        <fieldDefinition name="EastWest" type="String" />
+        <fieldDefinition name="Mode" type="String" />
+      </fieldDefinitions>
+    </geoEventDefinition>
     <geoEventDefinition name="NMEAGPGSA">
       <fieldDefinitions>
         <fieldDefinition name="DeviceId" type="String">
