@@ -59,6 +59,7 @@ public class NmeaInboundAdapter extends InboundAdapterBase
     translators.put("NMEAGPRMC", new NMEAGPRMCMessageTranslator());
     translators.put("NMEAGPGSA", new NMEAGPGSAMessageTranslator());
     translators.put("NMEAGPVTG", new NMEAGPVTGMessageTranslator());
+    translators.put("NMEAGNRMC", new NMEAGNRMCMessageTranslator());
     LOGGER.trace("Created NMEA adapter and translators");
   }
 
